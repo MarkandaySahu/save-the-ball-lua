@@ -1,25 +1,37 @@
 local love = require"love"
+local conf = require"conf"
+local enemy = require"Enemy"
+
+math.randomseed(os.time())--(pg-14,MKGVI)
+local game ={
+    difficulty=1,
+    state={
+        menu=false,
+        paused=false,
+        running=true,
+        ended=false
+    }
+}
 local player={
     radius=20,
     x=30,
     y=30
 }
-local game ={
-    state={
-        menu=true,
-        paused=false,
-        running=false,
-        ended=false
-    }
-}
+local enemies={}
+
 --------------------------------------------------------------------------------------
 function love.load()
     love.window.setTitle("Save the ball")--to set the title of the window
     love.mouse.setVisible(false)--this will make the mouse invisible
+
+    table.insert(enemies,1,enemy())
 end
 --------------------------------------------------------------------------------------
 function love.update(dt)
     player.x,player.y=love.mouse.getPosition()
+    for i = 1, #enemies do
+        enemies[i]:move(player.x,player.y)--(pg-72,MKSI)
+    end
 end
 --------------------------------------------------------------------------------------
 function love.draw()
@@ -33,10 +45,13 @@ function love.draw()
     )--this will get you the FPS counter
 
     if game.state["running"] then
+        for i = 1, #enemies do
+            enemies[i]:draw()
+        end
         love.graphics.circle("fill",player.x,player.y,player.radius)
     end
     if not game.state["running"] then
         love.graphics.circle("fill",player.x,player.y,player.radius/2)
     end
-    
+
 end
