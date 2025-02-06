@@ -11,7 +11,9 @@ local game ={
         paused=false,
         running=false,
         ended=false
-    }
+    },
+    points = 0,
+    levels = {15,30,60,120}
 }
 local player={
     radius=20,
@@ -21,15 +23,21 @@ local player={
 local buttons={
     menu_state={}
 }
-local enemies={}
+local function changeGameState(state)
+    game.state["menu"] = (state == "menu")
+    game.state["paused"] = (state == "paused")
+    game.state["running"] = (state == "running")
+    game.state["ended"] = (state == "ended")
+end
 local function startNewGame()
-    game.state["menu"]=false
-    game.state["running"]=true
-    
-    table.insert(enemies,1,enemy())
+    changeGameState("running")
+    game.points = 0--when the game starts our score will be zero.
+    Enemies = {
+        enemy(1)
+    }
 end
 
-function love.mousepressed(x,y,but,istouch,press)--it'll check the mouse press event.
+function love.mousepressed(x,y,but,istouch,press)--it'll check the mouse press event(pg-16,MKGVI).
     if not game.state["running"] then--the button press(1) will only work in non running state of the game.
         if but==1 then
             if game.state['menu'] then
@@ -55,10 +63,21 @@ end
 function love.update(dt)
     player.x,player.y=love.mouse.getPosition()
     if game.state["running"] then
-        for i = 1, #enemies do
-            enemies[i]:move(player.x,player.y)--(pg-72,MKSI)
+        for i = 1, #Enemies do
+            if not Enemies[i]:checkTouched(player.x,player.y,player.radius) then
+                Enemies[i]:move(player.x,player.y)--(pg-72,MKSI)
+                for j = 1, #game.levels, 1 do
+                    if math.floor(game.points)==game.levels[j] then
+                        table.insert(Enemies,1,enemy(game.difficulty*(j+1)))
+                        game.points = game.points + 1
+                    end
+                end
+            else
+                changeGameState("menu")
+            end
         end
     end
+    game.points = game.points + dt
 end
 --------------------------------------------------------------------------------------
 function love.draw()
@@ -72,8 +91,9 @@ function love.draw()
         )--this will get you the FPS counter
 
     if game.state["running"] then
-        for i = 1, #enemies do
-            enemies[i]:draw()
+        love.graphics.printf(math.floor(game.points),love.graphics.newFont(24),0,10,love.graphics.getWidth(),"center")
+        for i = 1, #Enemies do
+            Enemies[i]:draw()
         end
         love.graphics.circle("fill",player.x,player.y,player.radius)
     elseif game.state["menu"] then

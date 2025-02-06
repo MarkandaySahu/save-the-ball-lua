@@ -24,7 +24,9 @@ function Enemy(level)
         radius=_radius,
         x=_x,
         y=_y,
-
+        checkTouched = function (self,player_x,player_y,cursor_radius)
+            return math.sqrt((self.x-player_x)^2+(self.y-player_y)^2) <= cursor_radius*2
+        end,
         move = function (self,player_x,player_y)
             --for x coordinate
             if player_x - self.x >0 then--enemy is at the left side of the player
