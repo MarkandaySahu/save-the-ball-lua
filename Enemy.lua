@@ -20,7 +20,7 @@ function Enemy(level)
     end
 
     return{
-        level=level or 1,
+        level=(level or 1),
         radius=_radius,
         x=_x,
         y=_y,
