@@ -13,7 +13,7 @@ local game ={
         ended=false
     },
     points = 0,
-    levels = {15,30,60,120}
+    levels = {15,30,60,100,150,200}
 }
 local fonts={
     medium = {
@@ -89,7 +89,7 @@ function love.update(dt)
         for i = 1, #Enemies do
             if not Enemies[i]:checkTouched(player.x,player.y,player.radius) then
                 Enemies[i]:move(player.x,player.y)--(pg-72,MKSI)
-                for j = 1, #game.levels, 1 do
+                for j = 1, #game.levels do
                     if math.floor(game.points)==game.levels[j] then
                         table.insert(Enemies,1,enemy(game.difficulty*(j+1)))
                         game.points = game.points + 1
