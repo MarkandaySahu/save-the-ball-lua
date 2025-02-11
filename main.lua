@@ -73,8 +73,8 @@ function love.load()
     love.mouse.setVisible(false)--this will make the mouse invisible
 
     buttons.menu_state.play_game = button("Play Game",startNewGame,nil,140,40)
-    buttons.menu_state.settings = button("Settings",nil,nil,120,40)
-    buttons.menu_state.exit_game = button("Exit Game",love.event.quit,nil,130,40)
+    buttons.menu_state.settings = button("Settings",nil,nil,140,40)
+    buttons.menu_state.exit_game = button("Exit Game",love.event.quit,nil,140,40)
 
     buttons.ended_state.replay_game = button("Replay Game",startNewGame,nil,210,40)
     buttons.ended_state.menu = button("Menu",changeGameState,"menu",210,40)
@@ -122,9 +122,10 @@ function love.draw()
         end
         love.graphics.circle("fill",player.x,player.y,player.radius)
     elseif game.state["menu"] then
-        buttons.menu_state.play_game:draw(10,20,30,10)
-        buttons.menu_state.settings:draw(10,80,30,10)
-        buttons.menu_state.exit_game:draw(10,140,30,10)
+        love.graphics.printf("Main Menu",fonts.large.font,20,50,love.graphics.getWidth())
+        buttons.menu_state.play_game:draw(40,120,30,10)
+        buttons.menu_state.settings:draw(40,180,30,10)
+        buttons.menu_state.exit_game:draw(40,240,30,10)
        
     elseif game.state["ended"] then
         love.graphics.setFont(fonts.large.font)
